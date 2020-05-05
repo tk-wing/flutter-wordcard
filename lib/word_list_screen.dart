@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:my_own_wordcard/db/database.dart';
-import 'package:my_own_wordcard/main.dart';
-import 'package:my_own_wordcard/word_register_screen.dart';
+import 'package:flutter_wordcard/db/database.dart';
+import 'package:flutter_wordcard/main.dart';
+import 'package:flutter_wordcard/word_register_screen.dart';
 import 'package:toast/toast.dart';
 
 class WordListScreen extends StatefulWidget {

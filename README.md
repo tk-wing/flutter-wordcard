@@ -1,4 +1,4 @@
-# my_own_wordcard
+# flutter_wordcard
 
 A new Flutter project.
 

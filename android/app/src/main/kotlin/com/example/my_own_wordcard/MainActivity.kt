@@ -1,4 +1,4 @@
-package com.example.my_own_wordcard
+package com.example.flutter_wordcard
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterActivity

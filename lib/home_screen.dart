@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:my_own_wordcard/components/button_with_icon.dart';
-import 'package:my_own_wordcard/test_screen.dart';
-import 'package:my_own_wordcard/word_list_screen.dart';
+import 'package:flutter_wordcard/components/button_with_icon.dart';
+import 'package:flutter_wordcard/test_screen.dart';
+import 'package:flutter_wordcard/word_list_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   @override

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:my_own_wordcard/db/database.dart';
-import 'package:my_own_wordcard/main.dart';
+import 'package:flutter_wordcard/db/database.dart';
+import 'package:flutter_wordcard/main.dart';
 
 enum TestStatus {
   BEFORE,
