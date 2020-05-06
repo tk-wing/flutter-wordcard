@@ -126,25 +126,65 @@ class _WordRegisterScreenState extends State<WordRegisterScreen> {
   }
 
   Future<void> _insertword(Word word) async {
-    try {
-      await database.addWord(word);
-      questionController.clear();
-      answerController.clear();
-      Toast.show('登録が完了がしました。', context, duration: Toast.LENGTH_LONG);
-    } on SqliteException catch (e) {
-      Toast.show('この問題は既に登録されています。', context, duration: Toast.LENGTH_LONG);
-      return;
-    }
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (_) => AlertDialog(
+              title: Text('登録'),
+              content: Text('登録してもいいですか？'),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text('はい'),
+                  onPressed: () async {
+                    try {
+                      await database.addWord(word);
+                      questionController.clear();
+                      answerController.clear();
+                      Toast.show('登録が完了がしました。', context,
+                          duration: Toast.LENGTH_LONG);
+                    } on SqliteException catch (e) {
+                      Toast.show('この問題は既に登録されています。', context,
+                          duration: Toast.LENGTH_LONG);
+                    } finally {
+                      Navigator.pop(context);
+                    }
+                  },
+                ),
+                FlatButton(
+                  child: Text('いいえ'),
+                  onPressed: () => Navigator.pop(context),
+                )
+              ],
+            ));
   }
 
   Future<void> _updateWord(Word word) async {
-    try {
-      await database.updateWord(word);
-      _backToWordScreen();
-    } on SqliteException catch (e) {
-      Toast.show('エラーが発生しました。', context, duration: Toast.LENGTH_LONG);
-      return;
-    }
+    await showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (_) => AlertDialog(
+              title: Text("${word.strQuestion} の変更"),
+              content: Text('変更してもいいですか？'),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text('はい'),
+                  onPressed: () async {
+                    try {
+                      await database.updateWord(word);
+                    } on SqliteException catch (e) {
+                      Toast.show('エラーが発生しました。', context,
+                          duration: Toast.LENGTH_LONG);
+                    } finally {
+                      Navigator.pop(context);
+                    }
+                  },
+                ),
+                FlatButton(
+                  child: Text('いいえ'),
+                  onPressed: () => Navigator.pop(context),
+                )
+              ],
+            ));
   }
 
   Future<void> _onWordRegisterd() async {
@@ -162,6 +202,7 @@ class _WordRegisterScreenState extends State<WordRegisterScreen> {
 
     if (widget.status == RegisterStatus.EDIT) {
       await _updateWord(word);
+      _backToWordScreen();
     } else {
       await _insertword(word);
     }

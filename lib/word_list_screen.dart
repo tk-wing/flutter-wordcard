@@ -87,9 +87,28 @@ class _WordListScreenState extends State<WordListScreen> {
   }
 
   Future<void> _deleteWord(Word word) async {
-    await database.deleteWord(word);
-    Toast.show('削除が完了しました', context);
-    _getWordList();
+    showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (_) => AlertDialog(
+              title: Text(word.strQuestion),
+              content: Text('削除してもいいですか？'),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text('はい'),
+                  onPressed: () async {
+                    await database.deleteWord(word);
+                    Toast.show('削除が完了しました', context);
+                    _getWordList();
+                    Navigator.pop(context);
+                  },
+                ),
+                FlatButton(
+                  child: Text('いいえ'),
+                  onPressed: () => Navigator.pop(context),
+                ),
+              ],
+            ));
   }
 
   void _editWord(Word word) {
@@ -100,7 +119,7 @@ class _WordListScreenState extends State<WordListScreen> {
                 WordRegisterScreen(status: RegisterStatus.EDIT, word: word)));
   }
 
-  Future<void> _sortWords() async{
+  Future<void> _sortWords() async {
     _wordList = await database.allWordsWithOrder(desc: _isSort);
     _isSort = _isSort ? false : true;
     setState(() {});

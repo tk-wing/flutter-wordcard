@@ -20,8 +20,8 @@ class TestScreen extends StatefulWidget {
 
 class _TestScreenState extends State<TestScreen> {
   int _numberOfQuestion = 0;
-  String _textQuestion = '問題';
-  String _textAnswer = 'こたえ';
+  String _textQuestion = '';
+  String _textAnswer = '';
   bool _isMemorize = false;
   List<Word> _words = List();
   TestStatus _status;
@@ -58,34 +58,37 @@ class _TestScreenState extends State<TestScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('かくにんテスト'),
-        centerTitle: true,
-      ),
-      floatingActionButton: _isShowActionButton
-          ? FloatingActionButton(
-              onPressed: () => _toNext(),
-              child: Icon(Icons.skip_next),
-              tooltip: '次へ',
-            )
-          : null,
-      body: Stack(
-        children: <Widget>[
-          Column(
-            children: <Widget>[
-              SizedBox(height: 10.0),
-              _numberOfQuestionPart(),
-              SizedBox(height: 20.0),
-              _questionCardPart(),
-              SizedBox(height: 20.0),
-              _answerCardPart(),
-              SizedBox(height: 10.0),
-              _isMemorizedCheckPart(),
-            ],
-          ),
-          _finishMessage(),
-        ],
+    return WillPopScope(
+      onWillPop: () => _finishTestScreen(),
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('かくにんテスト'),
+          centerTitle: true,
+        ),
+        floatingActionButton: _isShowActionButton
+            ? FloatingActionButton(
+                onPressed: () => _toNext(),
+                child: Icon(Icons.skip_next),
+                tooltip: '次へ',
+              )
+            : null,
+        body: Stack(
+          children: <Widget>[
+            Column(
+              children: <Widget>[
+                SizedBox(height: 10.0),
+                _numberOfQuestionPart(),
+                SizedBox(height: 20.0),
+                _questionCardPart(),
+                SizedBox(height: 20.0),
+                _answerCardPart(),
+                SizedBox(height: 10.0),
+                _isMemorizedCheckPart(),
+              ],
+            ),
+            _finishMessage(),
+          ],
+        ),
       ),
     );
   }
@@ -195,7 +198,7 @@ class _TestScreenState extends State<TestScreen> {
 
   //テスト終了メッセージ
   Widget _finishMessage() {
-    if(_status != TestStatus.FINISH){
+    if (_status != TestStatus.FINISH) {
       return Container();
     }
     return Center(
@@ -204,7 +207,6 @@ class _TestScreenState extends State<TestScreen> {
         style: TextStyle(fontSize: 50.0),
       ),
     );
-
   }
 
   void _showQuestion() {
@@ -242,5 +244,28 @@ class _TestScreenState extends State<TestScreen> {
     setState(() {
       _isShowActionButton = false;
     });
+  }
+
+  Future<bool> _finishTestScreen() async {
+    await showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+              title: Text('テスト終了'),
+              content: Text('テストを終了してもいいですか？'),
+              actions: <Widget>[
+                FlatButton(
+                  child: Text('はい'),
+                  onPressed: () {
+                    Navigator.pop(context);
+                    Navigator.pop(context);
+                  },
+                ),
+                FlatButton(
+                  child: Text('いいえ'),
+                  onPressed: () => Navigator.pop(context),
+                ),
+              ],
+            ));
+    return false;
   }
 }
